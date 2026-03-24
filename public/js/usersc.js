@@ -168,7 +168,7 @@ async function handleAddUser(event) {
 async function handleEditUser(event) {
 	event.preventDefault();
 
-	const userId = document.getElementById("editUserId").value;
+	const userId = document.getElementById("editUserId").value.trim();
 	const payload = {
 		firstName: document.getElementById("editFirstName").value.trim(),
 		lastName: document.getElementById("editLastName").value.trim(),
@@ -176,15 +176,24 @@ async function handleEditUser(event) {
 		email: document.getElementById("editEmail").value.trim()
 	};
 
+	if (!userId || !/^\d+$/.test(userId)) {
+		showMessage(editUserMessage, "Invalid user selected for update.", "error");
+		return;
+	}
+
 	if (!payload.firstName || !payload.lastName || !payload.phone || !payload.email) {
 		showMessage(editUserMessage, "All fields are required.", "error");
 		return;
 	}
 
 	try {
-		const response = await fetch(`/users/${userId}`, {
+		const updateUrl = new URL(`/users/${encodeURIComponent(userId)}`, window.location.origin);
+		const response = await fetch(updateUrl.toString(), {
 			method: "PUT",
-			headers: { "Content-Type": "application/json" },
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json"
+			},
 			body: JSON.stringify(payload)
 		});
 		const data = await getResponseData(response);
@@ -196,7 +205,11 @@ async function handleEditUser(event) {
 		showMessage(editUserMessage, "User updated successfully.", "success");
 		await loadUsers();
 	} catch (error) {
-		showMessage(editUserMessage, error.message || "Unable to update user", "error");
+		const message = error && error.name === "TypeError"
+			? "Cannot reach server while updating user. Check if the backend is running and reachable."
+			: (error.message || "Unable to update user");
+
+		showMessage(editUserMessage, message, "error");
 	}
 }
 

@@ -4,6 +4,22 @@ function showLoginError(text) {
 	message.className = 'message error';
 }
 
+function togglePasswordVisibility(targetId, toggleButton) {
+	const input = document.getElementById(targetId);
+
+	if (!input) {
+		return;
+	}
+
+	if (input.type === 'password') {
+		input.type = 'text';
+		toggleButton.classList.add('active');
+	} else {
+		input.type = 'password';
+		toggleButton.classList.remove('active');
+	}
+}
+
 async function parseResponse(response) {
 	const text = await response.text();
 
@@ -53,5 +69,12 @@ async function loginUser(event) {
 
 document.addEventListener('DOMContentLoaded', function () {
 	const form = document.getElementById('loginForm');
+	const toggles = document.querySelectorAll('.eye-button');
 	form.addEventListener('submit', loginUser);
+
+	toggles.forEach(function (toggleButton) {
+		toggleButton.addEventListener('click', function () {
+			togglePasswordVisibility(toggleButton.dataset.target, toggleButton);
+		});
+	});
 });

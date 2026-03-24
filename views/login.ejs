@@ -32,7 +32,12 @@
 
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="password" placeholder="Enter password" required>
+                <div class="password-wrap">
+                    <input type="password" id="password" placeholder="Enter password" required>
+                    <button type="button" class="eye-button" data-target="password" aria-label="Toggle password visibility">
+                        <span class="eye-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
             </div>
 
             <button type="submit">Login</button>

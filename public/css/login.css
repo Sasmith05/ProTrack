@@ -114,6 +114,84 @@ input:hover {
 border-color: #22C55E;
 }
 
+.password-wrap {
+position: relative;
+}
+
+.password-wrap input {
+padding-right: 40px;
+}
+
+.eye-button {
+position: absolute;
+right: 10px;
+top: 50%;
+transform: translateY(-50%);
+margin: 0;
+padding: 0;
+min-width: 20px;
+width: 20px;
+height: 20px;
+font-size: 0;
+border-radius: 0;
+background: transparent;
+border: none;
+display: flex;
+align-items: center;
+justify-content: center;
+box-shadow: none;
+opacity: 0.9;
+}
+
+.eye-button:hover {
+transform: translateY(-50%);
+background: transparent;
+box-shadow: none;
+opacity: 1;
+}
+
+.eye-icon {
+width: 14px;
+height: 9px;
+border: 1.5px solid #C8D5E8;
+border-radius: 14px / 9px;
+display: block;
+position: relative;
+transform: none;
+}
+
+.eye-icon::before {
+content: "";
+position: absolute;
+width: 16px;
+height: 1.5px;
+background: #C8D5E8;
+left: -2px;
+top: 4px;
+transform: rotate(-36deg);
+border-radius: 2px;
+}
+
+.eye-icon::after {
+content: "";
+position: absolute;
+width: 3.5px;
+height: 3.5px;
+border-radius: 50%;
+background: #C8D5E8;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+}
+
+.eye-button.active .eye-icon {
+opacity: 0.55;
+}
+
+.eye-button.active .eye-icon::before {
+display: none;
+}
+
 button {
 display: block;
 margin: 30px auto;
