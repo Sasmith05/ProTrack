@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+ 
+<body>
+<div class="page-layout">
+
+    <div class="illustration">
+        <img src="/img/Login-rafiki.svg" alt="Login illustration" class="illustration-image">
+    </div>
+
+    <div class="container register-box">
+
+        <div class="ui-panel">
+            <div class="ui-content">
+                <h1>User Login</h1>
+            </div>
+        </div>
+
+        <p id="message" class="message"></p>
+
+        <form id="loginForm">
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="Enter email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+
+            <button type="submit">Login</button>
+
+            <p class="login-text">
+                New user? <a href="/register">Create account</a>
+            </p>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="/js/login.js"></script>
+
+</body>
+
+</html>

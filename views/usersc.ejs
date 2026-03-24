@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>User Dashboard</title>
+<link rel="stylesheet" href="/css/usersc.css">
+</head>
+
+<body>
+<div class="page-shell">
+<header class="topbar">
+<div>
+<p class="eyebrow">Dashboard</p>
+<h1>Welcome, <%= name %>!</h1>
+</div>
+<a class="logout-link" href="/login">Logout</a>
+</header>
+
+<main class="grid-layout">
+<section class="card">
+<h2>Add New User</h2>
+<form id="addUserForm" class="form-grid">
+<div class="form-group">
+<label for="addFirstName">First Name</label>
+<input type="text" id="addFirstName" required>
+</div>
+<div class="form-group">
+<label for="addLastName">Last Name</label>
+<input type="text" id="addLastName" required>
+</div>
+<div class="form-group">
+<label for="addPhone">Phone Number</label>
+<input type="text" id="addPhone" required>
+</div>
+<div class="form-group">
+<label for="addEmail">Email Address</label>
+<input type="email" id="addEmail" required>
+</div>
+<div class="form-group form-group-full">
+<label for="addPassword">Password</label>
+<div class="password-wrap">
+<input type="password" id="addPassword" required>
+<button type="button" class="eye-button" data-target="addPassword" aria-label="Toggle password visibility">
+<span class="eye-icon" aria-hidden="true"></span>
+</button>
+</div>
+</div>
+<div class="actions form-group-full">
+<button type="submit">Add User</button>
+</div>
+</form>
+<p id="addUserMessage" class="status-text"></p>
+</section>
+
+<section id="editUserCard" class="card hidden">
+<h2>Edit User</h2>
+<form id="editUserForm" class="form-grid">
+<input type="hidden" id="editUserId">
+<div class="form-group">
+<label for="editFirstName">First Name</label>
+<input type="text" id="editFirstName" required>
+</div>
+<div class="form-group">
+<label for="editLastName">Last Name</label>
+<input type="text" id="editLastName" required>
+</div>
+<div class="form-group">
+<label for="editPhone">Phone Number</label>
+<input type="text" id="editPhone" required>
+</div>
+<div class="form-group">
+<label for="editEmail">Email Address</label>
+<input type="email" id="editEmail" required>
+</div>
+<div class="actions form-group-full split-actions">
+<button type="submit">Save Changes</button>
+<button type="button" id="cancelEdit" class="secondary">Cancel</button>
+</div>
+</form>
+<p id="editUserMessage" class="status-text"></p>
+</section>
+
+<section class="card users-card">
+<div class="users-header">
+<h2>All Users</h2>
+</div>
+<p id="usersMessage" class="status-text"></p>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>First Name</th>
+<th>Last Name</th>
+<th>Phone Number</th>
+<th>Email</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="usersTableBody"></tbody>
+</table>
+</div>
+</section>
+</main>
+</div>
+
+<script src="/js/usersc.js"></script>
+
+</body>
+
+</html>
