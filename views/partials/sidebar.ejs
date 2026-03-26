@@ -1,12 +1,8 @@
 <aside class="sidebar card">
-<div class="brand-row">
-<span class="brand-logo" aria-hidden="true">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-<path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-</svg>
-</span>
-<span class="brand-title">ProTrack</span>
-</div>
+  <div style="margin-bottom: 20px; padding: 0 5px;">
+    <p class="toolbar-kicker" style="font-size: 11px; margin-bottom: 4px; color: #64748b; text-transform: uppercase;">ProTrack Dashboard</p>
+    <h2 style="font-size: 18px; font-weight: 600; color: var(--text); margin: 0; word-break: break-word;">Welcome, <%= name || 'User' %></h2>
+  </div>
 <nav>
 <a href="/users-page?name=<%= encodeURIComponent(name || 'User') %>" class="nav-link <%= activePage === 'users' ? 'active' : '' %>">
 <span>Users</span>
