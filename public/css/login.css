@@ -1,12 +1,12 @@
 :root {
-  --app-bg: #d8e1ef;
-  --line: #d7dfeb;
-  --line-2: #e5e9f2;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --primary: #3d5af1;
-  --primary-2: #2f49d6;
-  --white: #ffffff;
+  --app-bg: #0f172a;
+  --line: #334155;
+  --line-2: #1e293b;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --primary: #22c55e;
+  --primary-2: #16a34a;
+  --white: #1e293b;
 }
 
 * {
@@ -67,7 +67,7 @@ body {
   font-size: 32px;
   font-style: normal;
   font-weight: 700;
-  color: #2f3e67;
+  color: var(--text);
 }
 
 form {
@@ -84,7 +84,7 @@ form {
 .form-group label {
   font-size: 13px;
   margin-bottom: 6px;
-  color: #4b5563;
+  color: #cbd5e1;
   font-weight: 500;
 }
 
@@ -105,8 +105,8 @@ input::placeholder {
 
 input:focus {
   outline: none;
-  border-color: #93c5fd;
-  box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.28);
+  border-color: #86efac;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.28);
 }
 
 .password-wrap {
@@ -197,7 +197,7 @@ button {
 
 button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(61, 90, 241, 0.25);
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.25);
 }
 
 p {
