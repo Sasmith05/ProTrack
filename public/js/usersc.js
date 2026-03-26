@@ -7,6 +7,20 @@ const addUserMessage = document.getElementById("addUserMessage");
 const editUserCard = document.getElementById("editUserCard");
 const editUserForm = document.getElementById("editUserForm");
 const editUserMessage = document.getElementById("editUserMessage");
+const addUserModal = document.getElementById("addUserModal");
+
+function openAddUserModal() {
+	showMessage(addUserMessage, "");
+	addUserModal.classList.remove("hidden");
+	addUserModal.setAttribute("aria-hidden", "false");
+}
+
+function closeAddUserModal() {
+	addUserForm.reset();
+	showMessage(addUserMessage, "");
+	addUserModal.classList.add("hidden");
+	addUserModal.setAttribute("aria-hidden", "true");
+}
 
 function showMessage(element, text, type) {
 	element.innerText = text || "";
@@ -160,6 +174,7 @@ async function handleAddUser(event) {
 		addUserForm.reset();
 		showMessage(addUserMessage, "User added successfully.", "success");
 		await loadUsers();
+		closeAddUserModal();
 	} catch (error) {
 		showMessage(addUserMessage, error.message || "Unable to add user", "error");
 	}
@@ -227,6 +242,15 @@ usersTableBody.addEventListener("click", function (event) {
 addUserForm.addEventListener("submit", handleAddUser);
 editUserForm.addEventListener("submit", handleEditUser);
 document.getElementById("cancelEdit").addEventListener("click", closeEditForm);
+document.getElementById("openAddUserModal").addEventListener("click", openAddUserModal);
+document.getElementById("closeAddUserModal").addEventListener("click", closeAddUserModal);
+document.getElementById("cancelAddUser").addEventListener("click", closeAddUserModal);
+
+addUserModal.addEventListener("click", function (event) {
+	if (event.target === addUserModal) {
+		closeAddUserModal();
+	}
+});
 
 const passwordToggles = document.querySelectorAll(".eye-button");
 passwordToggles.forEach(function (toggleButton) {

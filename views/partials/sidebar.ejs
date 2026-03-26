@@ -1,8 +1,18 @@
 <aside class="sidebar card">
-<h2 class="sidebar-title">Navigation</h2>
+<div class="brand-row">
+<span class="brand-logo" aria-hidden="true">PT</span>
+<span class="brand-title">ProTrack</span>
+</div>
 <nav>
-<a href="/users-page?name=<%= encodeURIComponent(name || 'User') %>" class="nav-link <%= activePage === 'users' ? 'active' : '' %>">Users</a>
-<a href="/projects-page?name=<%= encodeURIComponent(name || 'User') %>" class="nav-link <%= activePage === 'projects' ? 'active' : '' %>">Projects</a>
-<a href="/login" class="nav-link">Logout</a>
+<a href="/users-page?name=<%= encodeURIComponent(name || 'User') %>" class="nav-link <%= activePage === 'users' ? 'active' : '' %>">
+<span>Users</span>
+</a>
+<a href="/projects-page?name=<%= encodeURIComponent(name || 'User') %>" class="nav-link <%= activePage === 'projects' ? 'active' : '' %>">
+<span>Projects</span>
+</a>
 </nav>
+
+<a href="/login" class="nav-link logout-link-side">
+<span>Log Out</span>
+</a>
 </aside>

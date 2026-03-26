@@ -8,21 +8,14 @@
 
 <body>
 <div class="page-shell">
-<header class="topbar">
-<div>
-<p class="eyebrow">Dashboard</p>
-<h1>Welcome, <%= name %>!</h1>
-</div>
-<span class="topbar-label">Users</span>
-</header>
+<%- include('partials/topbar', { name: name, buttonId: 'openAddUserModal', buttonLabel: 'Add User' }) %>
 
-<main class="layout-main">
-<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
-
-<section class="content-area">
-<div class="grid-layout">
-<section class="card">
+<section id="addUserModal" class="modal-overlay hidden" aria-hidden="true">
+<div class="modal-card">
+<div class="modal-header">
 <h2>Add New User</h2>
+<button type="button" id="closeAddUserModal" class="modal-close" aria-label="Close">x</button>
+</div>
 <form id="addUserForm" class="form-grid">
 <div class="form-group">
 <label for="addFirstName">First Name</label>
@@ -49,13 +42,20 @@
 </button>
 </div>
 </div>
-<div class="actions form-group-full">
-<button type="submit">Add User</button>
+<div class="actions form-group-full split-actions">
+<button type="submit">Save User</button>
+<button type="button" id="cancelAddUser" class="secondary">Cancel</button>
 </div>
 </form>
 <p id="addUserMessage" class="status-text"></p>
+</div>
 </section>
 
+<main class="layout-main">
+<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
+
+<section class="content-area">
+<div class="grid-layout">
 <section id="editUserCard" class="card hidden">
 <h2>Edit User</h2>
 <form id="editUserForm" class="form-grid">

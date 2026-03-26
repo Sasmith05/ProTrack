@@ -8,21 +8,14 @@
 
 <body>
 <div class="page-shell">
-<header class="topbar">
-<div>
-<p class="eyebrow">Dashboard</p>
-<h1>Welcome, <%= name %>!</h1>
-</div>
-<span class="topbar-label">Projects</span>
-</header>
+<%- include('partials/topbar', { name: name, buttonId: 'openAddProjectModal', buttonLabel: 'Add Project' }) %>
 
-<main class="layout-main">
-<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
-
-<section class="content-area">
-<div class="grid-layout">
-<section class="card">
+<section id="addProjectModal" class="modal-overlay hidden" aria-hidden="true">
+<div class="modal-card">
+<div class="modal-header">
 <h2>Add New Project</h2>
+<button type="button" id="closeAddProjectModal" class="modal-close" aria-label="Close">x</button>
+</div>
 <form id="addProjectForm" class="form-grid">
 <div class="form-group form-group-full">
 <label for="addProjectName">Project Name</label>
@@ -40,12 +33,20 @@
 <label for="addProjectEndDate">End Date</label>
 <input type="date" id="addProjectEndDate" required>
 </div>
-<div class="actions form-group-full">
+<div class="actions form-group-full split-actions">
 <button type="submit">Add Project</button>
+<button type="button" id="cancelAddProject" class="secondary">Cancel</button>
 </div>
 </form>
 <p id="addProjectMessage" class="status-text"></p>
+</div>
 </section>
+
+<main class="layout-main">
+<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
+
+<section class="content-area">
+<div class="grid-layout">
 
 <section id="editProjectCard" class="card hidden">
 <h2>Edit Project</h2>

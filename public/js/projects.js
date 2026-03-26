@@ -7,6 +7,20 @@ const addProjectMessage = document.getElementById("addProjectMessage");
 const editProjectCard = document.getElementById("editProjectCard");
 const editProjectForm = document.getElementById("editProjectForm");
 const editProjectMessage = document.getElementById("editProjectMessage");
+const addProjectModal = document.getElementById("addProjectModal");
+
+function openAddProjectModal() {
+	showMessage(addProjectMessage, "");
+	addProjectModal.classList.remove("hidden");
+	addProjectModal.setAttribute("aria-hidden", "false");
+}
+
+function closeAddProjectModal() {
+	addProjectForm.reset();
+	showMessage(addProjectMessage, "");
+	addProjectModal.classList.add("hidden");
+	addProjectModal.setAttribute("aria-hidden", "true");
+}
 
 function showMessage(element, text, type) {
 	element.innerText = text || "";
@@ -171,6 +185,7 @@ async function handleAddProject(event) {
 		addProjectForm.reset();
 		showMessage(addProjectMessage, "Project added successfully.", "success");
 		await loadProjects();
+		closeAddProjectModal();
 	} catch (error) {
 		showMessage(addProjectMessage, error.message || "Unable to add project", "error");
 	}
@@ -277,5 +292,14 @@ projectsTableBody.addEventListener("click", function (event) {
 addProjectForm.addEventListener("submit", handleAddProject);
 editProjectForm.addEventListener("submit", handleEditProject);
 document.getElementById("cancelProjectEdit").addEventListener("click", closeEditForm);
+document.getElementById("openAddProjectModal").addEventListener("click", openAddProjectModal);
+document.getElementById("closeAddProjectModal").addEventListener("click", closeAddProjectModal);
+document.getElementById("cancelAddProject").addEventListener("click", closeAddProjectModal);
+
+addProjectModal.addEventListener("click", function (event) {
+	if (event.target === addProjectModal) {
+		closeAddProjectModal();
+	}
+});
 
 loadProjects();
