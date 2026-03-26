@@ -23,8 +23,17 @@ app.get('/login', (req, res) => {
 	res.render('login');
 });
 
+app.get('/users-page', (req, res) => {
+	res.render('usersc', { name: req.query.name || 'User', activePage: 'users' });
+});
+
+app.get('/projects-page', (req, res) => {
+	res.render('projects', { name: req.query.name || 'User', activePage: 'projects' });
+});
+
 app.get('/dashboard', (req, res) => {
-	res.render('usersc', { name: req.query.name || 'User' });
+	const name = encodeURIComponent(req.query.name || 'User');
+	res.redirect(`/users-page?name=${name}`);
 });
 
 app.use('/', userRoutes);

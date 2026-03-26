@@ -104,11 +104,155 @@ exports.loginUser = async (req, res) => {
 		return res.status(200).json({
 			success: true,
 			name: rows[0].first_name || 'User',
-			redirectTo: '/dashboard'
+			redirectTo: '/users-page'
 		});
 	} catch (err) {
 		console.error('loginUser error:', err);
 		return res.status(500).json({ error: 'Database error' });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+};
+
+function toDbDate(value) {
+	if (!value) {
+		return null;
+	}
+
+	if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+		return null;
+	}
+
+	return value;
+}
+
+exports.getProjects = async (req, res) => {
+	let conn;
+
+	try {
+		conn = await db.getConnection();
+
+		const projects = await conn.query(
+			'SELECT id, project_name, description, start_date, end_date FROM projects ORDER BY id DESC'
+		);
+
+		return res.status(200).json({ success: true, projects: projects || [] });
+	} catch (err) {
+		console.error('getProjects error:', err);
+		return res.status(500).json({ error: 'Unable to fetch projects' });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+};
+
+exports.addProject = async (req, res) => {
+	let conn;
+
+	try {
+		const { projectName, description, startDate, endDate } = req.body || {};
+		const startDateValue = toDbDate(startDate);
+		const endDateValue = toDbDate(endDate);
+
+		if (!hasRequiredFields([projectName, description, startDateValue, endDateValue])) {
+			return res.status(400).json({ error: 'Missing required fields' });
+		}
+
+		if (startDateValue > endDateValue) {
+			return res.status(400).json({ error: 'Start date cannot be after end date' });
+		}
+
+		conn = await db.getConnection();
+
+		await conn.query(
+			'INSERT INTO projects(project_name, description, start_date, end_date) VALUES (?,?,?,?)',
+			[projectName, description, startDateValue, endDateValue]
+		);
+
+		return res.status(201).json({ success: true, message: 'Project added successfully' });
+	} catch (err) {
+		console.error('addProject error:', err);
+		return res.status(500).json({ error: 'Unable to add project' });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+};
+
+exports.updateProject = async (req, res) => {
+	let conn;
+
+	try {
+		const projectId = Number(req.params.id);
+		const { projectName, description, startDate, endDate } = req.body || {};
+		const startDateValue = toDbDate(startDate);
+		const endDateValue = toDbDate(endDate);
+
+		if (!Number.isInteger(projectId) || projectId <= 0) {
+			return res.status(400).json({ error: 'Invalid project id' });
+		}
+
+		if (!hasRequiredFields([projectName, description, startDateValue, endDateValue])) {
+			return res.status(400).json({ error: 'Missing required fields' });
+		}
+
+		if (startDateValue > endDateValue) {
+			return res.status(400).json({ error: 'Start date cannot be after end date' });
+		}
+
+		conn = await db.getConnection();
+
+		const existingProject = await conn.query(
+			'SELECT id FROM projects WHERE id=? LIMIT 1',
+			[projectId]
+		);
+
+		if (!existingProject.length) {
+			return res.status(404).json({ error: 'Project not found' });
+		}
+
+		await conn.query(
+			'UPDATE projects SET project_name=?, description=?, start_date=?, end_date=? WHERE id=?',
+			[projectName, description, startDateValue, endDateValue, projectId]
+		);
+
+		return res.status(200).json({ success: true, message: 'Project updated successfully' });
+	} catch (err) {
+		console.error('updateProject error:', err);
+		return res.status(500).json({ error: 'Unable to update project' });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+};
+
+exports.deleteProject = async (req, res) => {
+	let conn;
+
+	try {
+		const projectId = Number(req.params.id);
+
+		if (!Number.isInteger(projectId) || projectId <= 0) {
+			return res.status(400).json({ error: 'Invalid project id' });
+		}
+
+		conn = await db.getConnection();
+
+		const result = await conn.query('DELETE FROM projects WHERE id=?', [projectId]);
+
+		if (!result.affectedRows) {
+			return res.status(404).json({ error: 'Project not found' });
+		}
+
+		return res.status(200).json({ success: true, message: 'Project deleted successfully' });
+	} catch (err) {
+		console.error('deleteProject error:', err);
+		return res.status(500).json({ error: 'Unable to delete project' });
 	} finally {
 		if (conn) {
 			conn.release();

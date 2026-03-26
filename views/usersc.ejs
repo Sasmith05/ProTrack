@@ -13,10 +13,14 @@
 <p class="eyebrow">Dashboard</p>
 <h1>Welcome, <%= name %>!</h1>
 </div>
-<a class="logout-link" href="/login">Logout</a>
+<span class="topbar-label">Users</span>
 </header>
 
-<main class="grid-layout">
+<main class="layout-main">
+<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
+
+<section class="content-area">
+<div class="grid-layout">
 <section class="card">
 <h2>Add New User</h2>
 <form id="addUserForm" class="form-grid">
@@ -98,6 +102,8 @@
 </thead>
 <tbody id="usersTableBody"></tbody>
 </table>
+</div>
+</section>
 </div>
 </section>
 </main>

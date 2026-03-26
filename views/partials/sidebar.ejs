@@ -1,0 +1,8 @@
+<aside class="sidebar card">
+<h2 class="sidebar-title">Navigation</h2>
+<nav>
+<a href="/users-page?name=<%= encodeURIComponent(name || 'User') %>" class="nav-link <%= activePage === 'users' ? 'active' : '' %>">Users</a>
+<a href="/projects-page?name=<%= encodeURIComponent(name || 'User') %>" class="nav-link <%= activePage === 'projects' ? 'active' : '' %>">Projects</a>
+<a href="/login" class="nav-link">Logout</a>
+</nav>
+</aside>

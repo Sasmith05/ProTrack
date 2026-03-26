@@ -11,4 +11,10 @@ router.get('/users', userController.getUsers);
 router.post('/users', userController.addUser);
 router.put('/users/:id', userController.updateUser);
 
+// Dashboard projects
+router.get('/projects', userController.getProjects);
+router.post('/projects', userController.addProject);
+router.put('/projects/:id', userController.updateProject);
+router.delete('/projects/:id', userController.deleteProject);
+
 module.exports = router;

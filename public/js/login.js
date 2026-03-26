@@ -59,7 +59,7 @@ async function loginUser(event) {
 			return;
 		}
 
-		const redirectTo = data.redirectTo || '/dashboard';
+		const redirectTo = data.redirectTo || '/users-page';
 		const name = encodeURIComponent(data.name || 'User');
 		window.location.href = `${redirectTo}?name=${name}`;
 	} catch (_err) {
