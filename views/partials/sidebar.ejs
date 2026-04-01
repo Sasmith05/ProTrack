@@ -1,9 +1,6 @@
-<aside class="sidebar card">
-  <div style="margin-bottom: 20px; padding: 0 5px;">
-    <p class="toolbar-kicker" style="font-size: 11px; margin-bottom: 4px; color: #64748b; text-transform: uppercase;">ProTrack Dashboard</p>
-    <h2 style="font-size: 18px; font-weight: 600; color: var(--text); margin: 0; word-break: break-word;">Welcome, <%= name || 'User' %></h2>
-  </div>
-<nav>
+<aside id="mySidenav" class="sidebar card sidenav" aria-hidden="true">
+<button type="button" id="closeSidebarBtn" class="closebtn" aria-label="Close sidebar">&times;</button>
+<nav class="sidebar-nav" aria-label="Sidebar navigation">
 <a href="/users-page?name=<%= encodeURIComponent(name || 'User') %>" class="nav-link <%= activePage === 'users' ? 'active' : '' %>">
 <span>Users</span>
 </a>

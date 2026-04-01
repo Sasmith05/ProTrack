@@ -8,6 +8,36 @@ const editProjectCard = document.getElementById("editProjectCard");
 const editProjectForm = document.getElementById("editProjectForm");
 const editProjectMessage = document.getElementById("editProjectMessage");
 const addProjectModal = document.getElementById("addProjectModal");
+const sideNav = document.getElementById("mySidenav");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+function openNav() {
+	if (!sideNav) {
+		return;
+	}
+
+	sideNav.classList.add("open");
+	sideNav.setAttribute("aria-hidden", "false");
+
+	if (sidebarOverlay) {
+		sidebarOverlay.classList.remove("hidden");
+		sidebarOverlay.setAttribute("aria-hidden", "false");
+	}
+}
+
+function closeNav() {
+	if (!sideNav) {
+		return;
+	}
+
+	sideNav.classList.remove("open");
+	sideNav.setAttribute("aria-hidden", "true");
+
+	if (sidebarOverlay) {
+		sidebarOverlay.classList.add("hidden");
+		sidebarOverlay.setAttribute("aria-hidden", "true");
+	}
+}
 
 function openAddProjectModal() {
 	showMessage(addProjectMessage, "");
@@ -295,6 +325,18 @@ document.getElementById("cancelProjectEdit").addEventListener("click", closeEdit
 document.getElementById("openAddProjectModal").addEventListener("click", openAddProjectModal);
 document.getElementById("closeAddProjectModal").addEventListener("click", closeAddProjectModal);
 document.getElementById("cancelAddProject").addEventListener("click", closeAddProjectModal);
+document.getElementById("openSidebarBtn").addEventListener("click", openNav);
+document.getElementById("closeSidebarBtn").addEventListener("click", closeNav);
+
+if (sidebarOverlay) {
+	sidebarOverlay.addEventListener("click", closeNav);
+}
+
+document.addEventListener("keydown", function (event) {
+	if (event.key === "Escape") {
+		closeNav();
+	}
+});
 
 addProjectModal.addEventListener("click", function (event) {
 	if (event.target === addProjectModal) {
