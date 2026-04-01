@@ -3,7 +3,7 @@
 
 <head>
 <title>User Dashboard</title>
-<link rel="stylesheet" href="/css/usersc.css">
+<link rel="stylesheet" href="/css/usersc.css?v=20260401">
 </head>
 
 <body>
@@ -53,8 +53,12 @@
 
 <main class="layout-main">
 <%- include('partials/sidebar', { name: name, activePage: activePage }) %>
+<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
 
 <section class="content-area">
+<section class="page-context" aria-label="Page context">
+<p class="page-kicker">User Dashboard</p>
+</section>
 <div class="grid-layout">
 <section id="editUserCard" class="card hidden">
 <h2>Edit User</h2>
@@ -109,7 +113,7 @@
 </main>
 </div>
 
-<script src="/js/usersc.js"></script>
+<script src="/js/usersc.js?v=20260401"></script>
 
 </body>
 

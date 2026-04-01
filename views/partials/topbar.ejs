@@ -1,7 +1,13 @@
 <section class="page-toolbar">
-<div>
-<p class="toolbar-kicker">ProTrack Dashboard</p>
-<h1>Welcome, <%= name %></h1>
+<div class="toolbar-left">
+<button type="button" id="openSidebarBtn" class="sidebar-toggle" aria-label="Open sidebar">&#9776;</button>
+<a href="/users-page?name=<%= encodeURIComponent(name || 'User') %>" class="app-brand" aria-label="ProTrack home">
+<span class="app-brand-logo" aria-hidden="true">PT</span>
+<span class="app-brand-name">ProTrack</span>
+</a>
 </div>
+<div class="toolbar-actions">
+<p class="welcome-text">Welcome, <span><%= name %></span></p>
 <button type="button" id="<%= buttonId %>" class="toolbar-btn"><%= buttonLabel %></button>
+</div>
 </section>

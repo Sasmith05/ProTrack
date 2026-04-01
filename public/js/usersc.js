@@ -8,6 +8,36 @@ const editUserCard = document.getElementById("editUserCard");
 const editUserForm = document.getElementById("editUserForm");
 const editUserMessage = document.getElementById("editUserMessage");
 const addUserModal = document.getElementById("addUserModal");
+const sideNav = document.getElementById("mySidenav");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+function openNav() {
+	if (!sideNav) {
+		return;
+	}
+
+	sideNav.classList.add("open");
+	sideNav.setAttribute("aria-hidden", "false");
+
+	if (sidebarOverlay) {
+		sidebarOverlay.classList.remove("hidden");
+		sidebarOverlay.setAttribute("aria-hidden", "false");
+	}
+}
+
+function closeNav() {
+	if (!sideNav) {
+		return;
+	}
+
+	sideNav.classList.remove("open");
+	sideNav.setAttribute("aria-hidden", "true");
+
+	if (sidebarOverlay) {
+		sidebarOverlay.classList.add("hidden");
+		sidebarOverlay.setAttribute("aria-hidden", "true");
+	}
+}
 
 function openAddUserModal() {
 	showMessage(addUserMessage, "");
@@ -245,6 +275,18 @@ document.getElementById("cancelEdit").addEventListener("click", closeEditForm);
 document.getElementById("openAddUserModal").addEventListener("click", openAddUserModal);
 document.getElementById("closeAddUserModal").addEventListener("click", closeAddUserModal);
 document.getElementById("cancelAddUser").addEventListener("click", closeAddUserModal);
+document.getElementById("openSidebarBtn").addEventListener("click", openNav);
+document.getElementById("closeSidebarBtn").addEventListener("click", closeNav);
+
+if (sidebarOverlay) {
+	sidebarOverlay.addEventListener("click", closeNav);
+}
+
+document.addEventListener("keydown", function (event) {
+	if (event.key === "Escape") {
+		closeNav();
+	}
+});
 
 addUserModal.addEventListener("click", function (event) {
 	if (event.target === addUserModal) {
