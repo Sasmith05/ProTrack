@@ -4,7 +4,7 @@ const usersMessage = document.getElementById("usersMessage");
 const usersTableBody = document.getElementById("usersTableBody");
 const addUserForm = document.getElementById("addUserForm");
 const addUserMessage = document.getElementById("addUserMessage");
-const editUserCard = document.getElementById("editUserCard");
+const editUserModal = document.getElementById("editUserModal");
 const editUserForm = document.getElementById("editUserForm");
 const editUserMessage = document.getElementById("editUserMessage");
 const addUserModal = document.getElementById("addUserModal");
@@ -81,6 +81,20 @@ function createCell(text) {
 	return cell;
 }
 
+function createActionIcon(pathData, viewBox) {
+	const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	icon.setAttribute("viewBox", viewBox);
+	icon.setAttribute("aria-hidden", "true");
+	icon.classList.add("action-icon");
+
+	const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+	path.setAttribute("d", pathData);
+	path.setAttribute("fill", "currentColor");
+	icon.appendChild(path);
+
+	return icon;
+}
+
 function renderUsersTable() {
 	usersTableBody.innerHTML = "";
 
@@ -95,19 +109,42 @@ function renderUsersTable() {
 		const user = users[i];
 		const row = document.createElement("tr");
 
+		const actionCell = document.createElement("td");
+		actionCell.className = "table-actions";
+
+		const editButton = document.createElement("button");
+		editButton.type = "button";
+		editButton.className = "edit-button";
+		editButton.setAttribute("aria-label", "Edit user");
+		editButton.title = "Edit";
+		editButton.appendChild(
+			createActionIcon(
+				"M3 17.25V21h3.75l11-11-3.75-3.75-11 11zm17.71-10.04a1.003 1.003 0 000-1.42l-2.5-2.5a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 2-2.66z",
+				"0 0 24 24"
+			)
+		);
+		editButton.dataset.index = String(i);
+		actionCell.appendChild(editButton);
+
+		const deleteButton = document.createElement("button");
+		deleteButton.type = "button";
+		deleteButton.className = "delete-button";
+		deleteButton.setAttribute("aria-label", "Delete user");
+		deleteButton.title = "Delete";
+		deleteButton.appendChild(
+			createActionIcon(
+				"M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z",
+				"0 0 24 24"
+			)
+		);
+		deleteButton.dataset.id = String(user.id);
+		actionCell.appendChild(deleteButton);
+
+		row.appendChild(actionCell);
 		row.appendChild(createCell(user.first_name));
 		row.appendChild(createCell(user.last_name));
 		row.appendChild(createCell(user.phone));
 		row.appendChild(createCell(user.email));
-
-		const actionCell = document.createElement("td");
-		const editButton = document.createElement("button");
-		editButton.type = "button";
-		editButton.className = "edit-button";
-		editButton.innerText = "Edit";
-		editButton.dataset.index = String(i);
-		actionCell.appendChild(editButton);
-		row.appendChild(actionCell);
 
 		usersTableBody.appendChild(row);
 	}
@@ -147,14 +184,15 @@ function openEditFormByIndex(index) {
 	document.getElementById("editEmail").value = user.email || "";
 
 	showMessage(editUserMessage, "");
-	editUserCard.classList.remove("hidden");
-	editUserCard.scrollIntoView({ behavior: "smooth", block: "start" });
+	editUserModal.classList.remove("hidden");
+	editUserModal.setAttribute("aria-hidden", "false");
 }
 
 function closeEditForm() {
 	editUserForm.reset();
 	showMessage(editUserMessage, "");
-	editUserCard.classList.add("hidden");
+	editUserModal.classList.add("hidden");
+	editUserModal.setAttribute("aria-hidden", "true");
 }
 
 function togglePasswordVisibility(targetId, toggleButton) {
@@ -249,6 +287,7 @@ async function handleEditUser(event) {
 
 		showMessage(editUserMessage, "User updated successfully.", "success");
 		await loadUsers();
+		closeEditForm();
 	} catch (error) {
 		const message = error && error.name === "TypeError"
 			? "Cannot reach server while updating user. Check if the backend is running and reachable."
@@ -258,20 +297,59 @@ async function handleEditUser(event) {
 	}
 }
 
-usersTableBody.addEventListener("click", function (event) {
-	const button = event.target.closest(".edit-button");
-
-	if (!button) {
+async function handleDeleteUser(userId) {
+	if (!userId || !/^\d+$/.test(userId)) {
+		showMessage(usersMessage, "Invalid user selected for delete.", "error");
 		return;
 	}
 
-	const index = Number(button.dataset.index);
-	openEditFormByIndex(index);
+	const shouldDelete = window.confirm("Delete this user?");
+
+	if (!shouldDelete) {
+		return;
+	}
+
+	try {
+		const deleteUrl = new URL(`/users/${encodeURIComponent(userId)}`, window.location.origin);
+		const response = await fetch(deleteUrl.toString(), {
+			method: "DELETE",
+			headers: { Accept: "application/json" }
+		});
+		const data = await getResponseData(response);
+
+		if (!response.ok) {
+			throw new Error(data.error || "Unable to delete user");
+		}
+
+		if (document.getElementById("editUserId").value === userId) {
+			closeEditForm();
+		}
+
+		showMessage(usersMessage, "User deleted successfully.", "success");
+		await loadUsers();
+	} catch (error) {
+		showMessage(usersMessage, error.message || "Unable to delete user", "error");
+	}
+}
+
+usersTableBody.addEventListener("click", function (event) {
+	const editButton = event.target.closest(".edit-button");
+	if (editButton) {
+		const index = Number(editButton.dataset.index);
+		openEditFormByIndex(index);
+		return;
+	}
+
+	const deleteButton = event.target.closest(".delete-button");
+	if (deleteButton) {
+		handleDeleteUser(deleteButton.dataset.id);
+	}
 });
 
 addUserForm.addEventListener("submit", handleAddUser);
 editUserForm.addEventListener("submit", handleEditUser);
 document.getElementById("cancelEdit").addEventListener("click", closeEditForm);
+document.getElementById("closeEditUserModal").addEventListener("click", closeEditForm);
 document.getElementById("openAddUserModal").addEventListener("click", openAddUserModal);
 document.getElementById("closeAddUserModal").addEventListener("click", closeAddUserModal);
 document.getElementById("cancelAddUser").addEventListener("click", closeAddUserModal);
@@ -284,6 +362,8 @@ if (sidebarOverlay) {
 
 document.addEventListener("keydown", function (event) {
 	if (event.key === "Escape") {
+		closeAddUserModal();
+		closeEditForm();
 		closeNav();
 	}
 });
@@ -291,6 +371,12 @@ document.addEventListener("keydown", function (event) {
 addUserModal.addEventListener("click", function (event) {
 	if (event.target === addUserModal) {
 		closeAddUserModal();
+	}
+});
+
+editUserModal.addEventListener("click", function (event) {
+	if (event.target === editUserModal) {
+		closeEditForm();
 	}
 });
 

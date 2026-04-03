@@ -361,3 +361,32 @@ exports.updateUser = async (req, res) => {
 		}
 	}
 };
+
+exports.deleteUser = async (req, res) => {
+	let conn;
+
+	try {
+		const userId = Number(req.params.id);
+
+		if (!Number.isInteger(userId) || userId <= 0) {
+			return res.status(400).json({ error: 'Invalid user id' });
+		}
+
+		conn = await db.getConnection();
+
+		const result = await conn.query('DELETE FROM users WHERE id=?', [userId]);
+
+		if (!result.affectedRows) {
+			return res.status(404).json({ error: 'User not found' });
+		}
+
+		return res.status(200).json({ success: true, message: 'User deleted successfully' });
+	} catch (err) {
+		console.error('deleteUser error:', err);
+		return res.status(500).json({ error: 'Unable to delete user' });
+	} finally {
+		if (conn) {
+			conn.release();
+		}
+	}
+};

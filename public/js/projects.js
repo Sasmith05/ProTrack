@@ -4,7 +4,7 @@ const projectsMessage = document.getElementById("projectsMessage");
 const projectsTableBody = document.getElementById("projectsTableBody");
 const addProjectForm = document.getElementById("addProjectForm");
 const addProjectMessage = document.getElementById("addProjectMessage");
-const editProjectCard = document.getElementById("editProjectCard");
+const editProjectModal = document.getElementById("editProjectModal");
 const editProjectForm = document.getElementById("editProjectForm");
 const editProjectMessage = document.getElementById("editProjectMessage");
 const addProjectModal = document.getElementById("addProjectModal");
@@ -170,14 +170,15 @@ function openEditFormByIndex(index) {
 	document.getElementById("editProjectEndDate").value = formatDate(project.end_date);
 
 	showMessage(editProjectMessage, "");
-	editProjectCard.classList.remove("hidden");
-	editProjectCard.scrollIntoView({ behavior: "smooth", block: "start" });
+	editProjectModal.classList.remove("hidden");
+	editProjectModal.setAttribute("aria-hidden", "false");
 }
 
 function closeEditForm() {
 	editProjectForm.reset();
 	showMessage(editProjectMessage, "");
-	editProjectCard.classList.add("hidden");
+	editProjectModal.classList.add("hidden");
+	editProjectModal.setAttribute("aria-hidden", "true");
 }
 
 async function handleAddProject(event) {
@@ -265,6 +266,7 @@ async function handleEditProject(event) {
 
 		showMessage(editProjectMessage, "Project updated successfully.", "success");
 		await loadProjects();
+		closeEditForm();
 	} catch (error) {
 		showMessage(editProjectMessage, error.message || "Unable to update project", "error");
 	}
@@ -322,6 +324,7 @@ projectsTableBody.addEventListener("click", function (event) {
 addProjectForm.addEventListener("submit", handleAddProject);
 editProjectForm.addEventListener("submit", handleEditProject);
 document.getElementById("cancelProjectEdit").addEventListener("click", closeEditForm);
+document.getElementById("closeEditProjectModal").addEventListener("click", closeEditForm);
 document.getElementById("openAddProjectModal").addEventListener("click", openAddProjectModal);
 document.getElementById("closeAddProjectModal").addEventListener("click", closeAddProjectModal);
 document.getElementById("cancelAddProject").addEventListener("click", closeAddProjectModal);
@@ -334,6 +337,8 @@ if (sidebarOverlay) {
 
 document.addEventListener("keydown", function (event) {
 	if (event.key === "Escape") {
+		closeAddProjectModal();
+		closeEditForm();
 		closeNav();
 	}
 });
@@ -341,6 +346,12 @@ document.addEventListener("keydown", function (event) {
 addProjectModal.addEventListener("click", function (event) {
 	if (event.target === addProjectModal) {
 		closeAddProjectModal();
+	}
+});
+
+editProjectModal.addEventListener("click", function (event) {
+	if (event.target === editProjectModal) {
+		closeEditForm();
 	}
 });
 

@@ -42,18 +42,12 @@
 </div>
 </section>
 
-<main class="layout-main">
-<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
-<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
-
-<section class="content-area">
-<section class="page-context" aria-label="Page context">
-<p class="page-kicker">Projects Dashboard</p>
-</section>
-<div class="grid-layout">
-
-<section id="editProjectCard" class="card hidden">
+<section id="editProjectModal" class="modal-overlay hidden" aria-hidden="true">
+<div class="modal-card">
+<div class="modal-header">
 <h2>Edit Project</h2>
+<button type="button" id="closeEditProjectModal" class="modal-close" aria-label="Close">x</button>
+</div>
 <form id="editProjectForm" class="form-grid">
 <input type="hidden" id="editProjectId">
 <div class="form-group form-group-full">
@@ -78,8 +72,18 @@
 </div>
 </form>
 <p id="editProjectMessage" class="status-text"></p>
+</div>
 </section>
 
+<main class="layout-main">
+<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
+<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
+
+<section class="content-area">
+<section class="page-context" aria-label="Page context">
+<p class="page-kicker">Projects Dashboard</p>
+</section>
+<div class="grid-layout">
 <section class="card users-card">
 <div class="users-header">
 <h2>All Projects</h2>

@@ -10,6 +10,7 @@ router.post('/login', userController.loginUser);
 router.get('/users', userController.getUsers);
 router.post('/users', userController.addUser);
 router.put('/users/:id', userController.updateUser);
+router.delete('/users/:id', userController.deleteUser);
 
 // Dashboard projects
 router.get('/projects', userController.getProjects);

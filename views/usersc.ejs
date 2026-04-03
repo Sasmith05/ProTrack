@@ -51,17 +51,12 @@
 </div>
 </section>
 
-<main class="layout-main">
-<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
-<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
-
-<section class="content-area">
-<section class="page-context" aria-label="Page context">
-<p class="page-kicker">User Dashboard</p>
-</section>
-<div class="grid-layout">
-<section id="editUserCard" class="card hidden">
+<section id="editUserModal" class="modal-overlay hidden" aria-hidden="true">
+<div class="modal-card">
+<div class="modal-header">
 <h2>Edit User</h2>
+<button type="button" id="closeEditUserModal" class="modal-close" aria-label="Close">x</button>
+</div>
 <form id="editUserForm" class="form-grid">
 <input type="hidden" id="editUserId">
 <div class="form-group">
@@ -86,8 +81,18 @@
 </div>
 </form>
 <p id="editUserMessage" class="status-text"></p>
+</div>
 </section>
 
+<main class="layout-main">
+<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
+<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
+
+<section class="content-area">
+<section class="page-context" aria-label="Page context">
+<p class="page-kicker">User Dashboard</p>
+</section>
+<div class="grid-layout">
 <section class="card users-card">
 <div class="users-header">
 <h2>All Users</h2>
@@ -97,11 +102,11 @@
 <table>
 <thead>
 <tr>
+<th>Actions</th>
 <th>First Name</th>
 <th>Last Name</th>
 <th>Phone Number</th>
 <th>Email</th>
-<th>Actions</th>
 </tr>
 </thead>
 <tbody id="usersTableBody"></tbody>
