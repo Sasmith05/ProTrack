@@ -80,16 +80,24 @@ body {
 }
 
 .app-brand-logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  color: #052e1a;
-  font-size: 13px;
-  font-weight: 800;
+  background: linear-gradient(135deg, #4f74ff, #2f49d6);
+  color: #ffffff;
+}
+
+.app-brand-logo svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .app-brand-name {

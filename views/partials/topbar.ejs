@@ -2,7 +2,11 @@
 <div class="toolbar-left">
 <button type="button" id="openSidebarBtn" class="sidebar-toggle" aria-label="Open sidebar">&#9776;</button>
 <a href="/users-page?name=<%= encodeURIComponent(name || 'User') %>" class="app-brand" aria-label="ProTrack home">
-<span class="app-brand-logo" aria-hidden="true">PT</span>
+<span class="app-brand-logo" aria-hidden="true">
+<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+<path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+</svg>
+</span>
 <span class="app-brand-name">ProTrack</span>
 </a>
 </div>
