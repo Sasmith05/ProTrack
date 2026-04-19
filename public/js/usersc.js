@@ -1,4 +1,17 @@
 let users = [];
+const USER_STATUS = Object.freeze({
+	ACTIVE: "active",
+	INACTIVE: "inactive"
+});
+
+function normalizeUserStatus(value) {
+	if (typeof value !== "string") {
+		return USER_STATUS.INACTIVE;
+	}
+
+	const normalized = value.trim().toLowerCase();
+	return normalized === USER_STATUS.ACTIVE ? USER_STATUS.ACTIVE : USER_STATUS.INACTIVE;
+}
 
 const usersMessage = document.getElementById("usersMessage");
 const usersTableBody = document.getElementById("usersTableBody");
@@ -81,6 +94,18 @@ function createCell(text) {
 	return cell;
 }
 
+function createStatusCell(statusValue) {
+	const cell = document.createElement("td");
+	const status = normalizeUserStatus(statusValue);
+	const badge = document.createElement("span");
+
+	badge.className = `status-pill status-${status}`;
+	badge.textContent = status === USER_STATUS.ACTIVE ? "Active" : "Inactive";
+
+	cell.appendChild(badge);
+	return cell;
+}
+
 function createActionIcon(pathData, viewBox) {
 	const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 	icon.setAttribute("viewBox", viewBox);
@@ -145,6 +170,7 @@ function renderUsersTable() {
 		row.appendChild(createCell(user.last_name));
 		row.appendChild(createCell(user.phone));
 		row.appendChild(createCell(user.email));
+		row.appendChild(createStatusCell(user.status));
 
 		usersTableBody.appendChild(row);
 	}
@@ -182,6 +208,7 @@ function openEditFormByIndex(index) {
 	document.getElementById("editLastName").value = user.last_name || "";
 	document.getElementById("editPhone").value = user.phone || "";
 	document.getElementById("editEmail").value = user.email || "";
+	document.getElementById("editStatus").value = normalizeUserStatus(user.status);
 
 	showMessage(editUserMessage, "");
 	editUserModal.classList.remove("hidden");
@@ -219,7 +246,8 @@ async function handleAddUser(event) {
 		lastName: document.getElementById("addLastName").value.trim(),
 		phone: document.getElementById("addPhone").value.trim(),
 		email: document.getElementById("addEmail").value.trim(),
-		password: document.getElementById("addPassword").value
+		password: document.getElementById("addPassword").value,
+		status: normalizeUserStatus(document.getElementById("addStatus").value)
 	};
 
 	if (!payload.firstName || !payload.lastName || !payload.phone || !payload.email || !payload.password) {
@@ -256,7 +284,8 @@ async function handleEditUser(event) {
 		firstName: document.getElementById("editFirstName").value.trim(),
 		lastName: document.getElementById("editLastName").value.trim(),
 		phone: document.getElementById("editPhone").value.trim(),
-		email: document.getElementById("editEmail").value.trim()
+		email: document.getElementById("editEmail").value.trim(),
+		status: normalizeUserStatus(document.getElementById("editStatus").value)
 	};
 
 	if (!userId || !/^\d+$/.test(userId)) {

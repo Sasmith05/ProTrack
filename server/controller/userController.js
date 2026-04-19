@@ -1,4 +1,5 @@
 const db = require('../db/connection');
+const { UserStatus, normalizeUserStatus } = require('../enums/userStatusEnum');
 
 function isStrongPassword(password = '') {
 	const hasMinLength = password.length >= 8;
@@ -38,10 +39,10 @@ async function emailExists(conn, email, currentUserId) {
 	return rows.length > 0;
 }
 
-async function createUser(conn, firstName, lastName, phone, email, password) {
+async function createUser(conn, firstName, lastName, phone, email, password, status = UserStatus.INACTIVE) {
 	await conn.query(
-		'INSERT INTO users(first_name,last_name,phone,email,password) VALUES (?,?,?,?,?)',
-		[firstName, lastName, phone, email, password]
+		'INSERT INTO users(first_name,last_name,phone,email,password,status) VALUES (?,?,?,?,?,?)',
+		[firstName, lastName, phone, email, password, status]
 	);
 }
 
@@ -267,7 +268,7 @@ exports.getUsers = async (req, res) => {
 		conn = await db.getConnection();
 
 		const users = await conn.query(
-			'SELECT id, first_name, last_name, phone, email FROM users ORDER BY id DESC'
+			'SELECT id, first_name, last_name, phone, email, status FROM users ORDER BY id DESC'
 		);
 
 		return res.status(200).json({ success: true, users: users || [] });
@@ -285,7 +286,8 @@ exports.addUser = async (req, res) => {
 	let conn;
 
 	try {
-		const { firstName, lastName, phone, email, password } = req.body || {};
+		const { firstName, lastName, phone, email, password, status } = req.body || {};
+		const normalizedStatus = normalizeUserStatus(status);
 
 		if (!hasRequiredFields([firstName, lastName, phone, email, password])) {
 			return res.status(400).json({ error: 'Missing required fields' });
@@ -303,7 +305,7 @@ exports.addUser = async (req, res) => {
 			return res.status(409).json({ error: 'Email already exists' });
 		}
 
-		await createUser(conn, firstName, lastName, phone, email, password);
+		await createUser(conn, firstName, lastName, phone, email, password, normalizedStatus);
 
 		return res.status(201).json({ success: true, message: 'User added successfully' });
 	} catch (err) {
@@ -321,7 +323,8 @@ exports.updateUser = async (req, res) => {
 
 	try {
 		const userId = Number(req.params.id);
-		const { firstName, lastName, phone, email } = req.body || {};
+		const { firstName, lastName, phone, email, status } = req.body || {};
+		const normalizedStatus = normalizeUserStatus(status);
 
 		if (!Number.isInteger(userId) || userId <= 0) {
 			return res.status(400).json({ error: 'Invalid user id' });
@@ -347,8 +350,8 @@ exports.updateUser = async (req, res) => {
 		}
 
 		await conn.query(
-			'UPDATE users SET first_name=?, last_name=?, phone=?, email=? WHERE id=?',
-			[firstName, lastName, phone, email, userId]
+			'UPDATE users SET first_name=?, last_name=?, phone=?, email=?, status=? WHERE id=?',
+			[firstName, lastName, phone, email, normalizedStatus, userId]
 		);
 
 		return res.status(200).json({ success: true, message: 'User updated successfully' });
