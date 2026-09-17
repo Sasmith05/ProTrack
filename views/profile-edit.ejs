@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Profile — ProTrack</title>
+<link rel="stylesheet" href="/css/usersc.css?v=20260422">
+<link rel="stylesheet" href="/css/profile.css?v=20260422">
+</head>
+
+<body>
+<div class="page-shell">
+<%- include('partials/topbar', { buttonId: '', buttonLabel: '' }) %>
+
+<main class="layout-main">
+<%- include('partials/sidebar', { activePage: 'profile' }) %>
+<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
+
+<section class="content-area">
+  <section class="page-context">
+    <p class="page-kicker">Edit Profile</p>
+  </section>
+
+  <% if (error) { %>
+  <div class="profile-error-banner"><%= error %></div>
+  <% } %>
+
+  <form class="profile-edit-form" action="/profile/edit" method="POST" enctype="multipart/form-data" id="profileEditForm">
+
+    <!-- Avatar upload -->
+    <div class="profile-avatar-edit-wrap">
+      <div class="profile-avatar-preview" id="avatarPreview">
+        <% if (profile.avatar) { %>
+        <img src="<%= profile.avatar %>" alt="Current avatar" id="avatarImg" class="profile-avatar-img">
+        <% } else { %>
+        <div class="profile-avatar-placeholder" id="avatarInitial">
+          <%= profile.first_name ? profile.first_name.charAt(0).toUpperCase() : '?' %>
+        </div>
+        <% } %>
+      </div>
+      <label class="avatar-upload-btn" for="avatarInput">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload Photo
+      </label>
+      <input type="file" id="avatarInput" name="avatar" accept="image/*" class="avatar-file-input">
+      <p class="avatar-hint">JPG, PNG, GIF or WebP · Max 2 MB</p>
+    </div>
+
+    <div class="profile-edit-grid">
+
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" value="<%= profile.first_name || '' %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" value="<%= profile.last_name || '' %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" id="phone" name="phone" value="<%= profile.phone || '' %>">
+      </div>
+
+      <div class="form-group">
+        <label for="designation">Designation</label>
+        <input type="text" id="designation" name="designation" value="<%= profile.designation || '' %>" placeholder="e.g. Senior Developer">
+      </div>
+
+      <div class="form-group">
+        <label for="department">Department</label>
+        <input type="text" id="department" name="department" value="<%= profile.department || '' %>" placeholder="e.g. Engineering">
+      </div>
+
+      <div class="form-group">
+        <label for="experience">Experience</label>
+        <input type="text" id="experience" name="experience" value="<%= profile.experience || '' %>" placeholder="e.g. 3 years">
+      </div>
+
+      <div class="form-group">
+        <label for="joiningDate">Joining Date</label>
+        <input type="date" id="joiningDate" name="joiningDate" value="<%= profile.joining_date ? new Date(profile.joining_date).toISOString().split('T')[0] : '' %>">
+      </div>
+
+      <div class="form-group form-group-full">
+        <label for="skills">Skills <span class="field-hint">(comma-separated)</span></label>
+        <input type="text" id="skills" name="skills" value="<%= profile.skills || '' %>" placeholder="e.g. JavaScript, Node.js, MySQL">
+      </div>
+
+      <div class="form-group form-group-full">
+        <label for="address">Address</label>
+        <textarea id="address" name="address" rows="2" placeholder="Your address"><%= profile.address || '' %></textarea>
+      </div>
+
+      <div class="form-group form-group-full">
+        <label for="bio">Bio</label>
+        <textarea id="bio" name="bio" rows="3" placeholder="Tell us about yourself"><%= profile.bio || '' %></textarea>
+      </div>
+
+    </div>
+
+    <div class="profile-edit-actions">
+      <button type="submit" class="profile-save-btn">Save Changes</button>
+      <a href="/profile" class="profile-cancel-btn">Cancel</a>
+    </div>
+
+  </form>
+</section>
+</main>
+</div>
+
+<script src="/js/profile.js?v=20260422"></script>
+</body>
+</html>

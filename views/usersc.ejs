@@ -3,12 +3,12 @@
 
 <head>
 <title>User Dashboard</title>
-<link rel="stylesheet" href="/css/usersc.css?v=20260401">
+<link rel="stylesheet" href="/css/usersc.css?v=20260422">
 </head>
 
 <body>
 <div class="page-shell">
-<%- include('partials/topbar', { name: name, buttonId: 'openAddUserModal', buttonLabel: 'Add User' }) %>
+<%- include('partials/topbar', { buttonId: 'openAddUserModal', buttonLabel: 'Add User' }) %>
 
 <section id="addUserModal" class="modal-overlay hidden" aria-hidden="true">
 <div class="modal-card">
@@ -38,6 +38,17 @@
 <select id="addStatus" required>
 <option value="active">Active</option>
 <option value="inactive" selected>Inactive</option>
+</select>
+</div>
+<div class="form-group">
+<label for="addRole">Role</label>
+<select id="addRole" required>
+  <% if (sessionUser && sessionUser.role === 'super_admin') { %>
+  <option value="super_admin">Super Admin</option>
+  <% } %>
+  <option value="admin">Admin</option>
+  <option value="project_manager">Project Manager</option>
+  <option value="employee" selected>Employee</option>
 </select>
 </div>
 <div class="form-group form-group-full">
@@ -89,6 +100,17 @@
 <option value="inactive">Inactive</option>
 </select>
 </div>
+<div class="form-group">
+<label for="editRole">Role</label>
+<select id="editRole" required>
+  <% if (sessionUser && sessionUser.role === 'super_admin') { %>
+  <option value="super_admin">Super Admin</option>
+  <% } %>
+  <option value="admin">Admin</option>
+  <option value="project_manager">Project Manager</option>
+  <option value="employee">Employee</option>
+</select>
+</div>
 <div class="actions form-group-full split-actions">
 <button type="submit">Save Changes</button>
 <button type="button" id="cancelEdit" class="secondary">Cancel</button>
@@ -99,7 +121,7 @@
 </section>
 
 <main class="layout-main">
-<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
+<%- include('partials/sidebar', { activePage: activePage }) %>
 <div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
 
 <section class="content-area">
@@ -121,6 +143,7 @@
 <th>Last Name</th>
 <th>Phone Number</th>
 <th>Email</th>
+<th>Role</th>
 <th>Status</th>
 </tr>
 </thead>
@@ -133,7 +156,12 @@
 </main>
 </div>
 
-<script src="/js/usersc.js?v=20260401"></script>
+<%# Pass session role to client JS safely %>
+<script>
+  window.__SESSION_ROLE = '<%= sessionUser ? sessionUser.role : "" %>';
+  window.__SESSION_USER_ID = <%= sessionUser ? sessionUser.id : 0 %>;
+</script>
+<script src="/js/usersc.js?v=20260422"></script>
 
 </body>
 

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile — ProTrack</title>
+<link rel="stylesheet" href="/css/usersc.css?v=20260422">
+<link rel="stylesheet" href="/css/profile.css?v=20260422">
+</head>
+
+<body>
+<div class="page-shell">
+<%- include('partials/topbar', { buttonId: '', buttonLabel: '' }) %>
+
+<main class="layout-main">
+<%- include('partials/sidebar', { activePage: 'profile' }) %>
+<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
+
+<section class="content-area">
+  <section class="page-context">
+    <p class="page-kicker">My Profile</p>
+  </section>
+
+  <div class="profile-layout">
+
+    <!-- Avatar + summary card -->
+    <div class="profile-sidebar-card">
+      <div class="profile-avatar-wrap">
+        <% if (profile.avatar) { %>
+        <img src="<%= profile.avatar %>" alt="Profile picture" class="profile-avatar-img">
+        <% } else { %>
+        <div class="profile-avatar-placeholder"><%= profile.first_name ? profile.first_name.charAt(0).toUpperCase() : '?' %></div>
+        <% } %>
+      </div>
+      <h2 class="profile-name"><%= profile.first_name %> <%= profile.last_name %></h2>
+      <p class="profile-designation"><%= profile.designation || 'No designation set' %></p>
+      <span class="profile-role-badge role-<%= profile.role %>"><%= profile.role.replace(/_/g,' ') %></span>
+      <a href="/profile/edit" class="profile-edit-btn">Edit Profile</a>
+    </div>
+
+    <!-- Details card -->
+    <div class="profile-details-card">
+
+      <div class="profile-section">
+        <h3 class="profile-section-title">Personal Information</h3>
+        <div class="profile-grid">
+          <div class="profile-field">
+            <span class="profile-field-label">Email</span>
+            <span class="profile-field-value"><%= profile.email %></span>
+          </div>
+          <div class="profile-field">
+            <span class="profile-field-label">Phone</span>
+            <span class="profile-field-value"><%= profile.phone || '—' %></span>
+          </div>
+          <div class="profile-field">
+            <span class="profile-field-label">Department</span>
+            <span class="profile-field-value"><%= profile.department || '—' %></span>
+          </div>
+          <div class="profile-field">
+            <span class="profile-field-label">Experience</span>
+            <span class="profile-field-value"><%= profile.experience || '—' %></span>
+          </div>
+          <div class="profile-field">
+            <span class="profile-field-label">Joining Date</span>
+            <span class="profile-field-value"><%= profile.joining_date ? new Date(profile.joining_date).toLocaleDateString('en-IN') : '—' %></span>
+          </div>
+          <div class="profile-field">
+            <span class="profile-field-label">Status</span>
+            <span class="badge badge--<%= profile.status %>"><%= profile.status %></span>
+          </div>
+        </div>
+      </div>
+
+      <% if (profile.bio) { %>
+      <div class="profile-section">
+        <h3 class="profile-section-title">Bio</h3>
+        <p class="profile-bio"><%= profile.bio %></p>
+      </div>
+      <% } %>
+
+      <% if (profile.skills) { %>
+      <div class="profile-section">
+        <h3 class="profile-section-title">Skills</h3>
+        <div class="skills-wrap">
+          <% profile.skills.split(',').forEach(function(skill) { %>
+          <% if (skill.trim()) { %>
+          <span class="skill-tag"><%= skill.trim() %></span>
+          <% } %>
+          <% }); %>
+        </div>
+      </div>
+      <% } %>
+
+      <% if (profile.address) { %>
+      <div class="profile-section">
+        <h3 class="profile-section-title">Address</h3>
+        <p class="profile-bio"><%= profile.address %></p>
+      </div>
+      <% } %>
+
+    </div>
+  </div>
+</section>
+</main>
+</div>
+
+</body>
+</html>

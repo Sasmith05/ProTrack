@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanban Board — ProTrack</title>
+<meta name="description" content="ProTrack Kanban board — drag and drop tasks between status columns.">
+<link rel="stylesheet" href="/css/usersc.css?v=20260728">
+<link rel="stylesheet" href="/css/kanban.css?v=20260728">
+<link rel="stylesheet" href="/css/toast.css?v=20260728">
+</head>
+<body>
+<div class="page-shell">
+<%- include('partials/topbar', { buttonId: '', buttonLabel: '' }) %>
+
+<!-- Task Detail Panel (reused from tasks page) -->
+<div id="taskDetailPanel" class="task-detail-panel hidden">
+  <div class="task-detail-header">
+    <h3 id="detailTaskTitle">Task Details</h3>
+    <button type="button" id="closeDetailPanel" class="modal-close">&times;</button>
+  </div>
+  <div id="taskDetailBody" class="task-detail-body"></div>
+</div>
+<div id="taskDetailOverlay" class="sidebar-overlay hidden"></div>
+
+<main class="layout-main">
+<%- include('partials/sidebar', { activePage: activePage }) %>
+<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
+
+<section class="content-area kanban-content">
+  <section class="page-context" aria-label="Page context">
+    <p class="page-kicker">Kanban Board</p>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/dashboard">Dashboard</a><span>/</span><span>Kanban</span>
+    </nav>
+  </section>
+
+  <!-- Kanban Filter Row -->
+  <div class="kanban-toolbar card">
+    <div class="filter-group">
+      <label for="kanbanProjectFilter">Project</label>
+      <select id="kanbanProjectFilter"><option value="">All Projects</option></select>
+    </div>
+    <div class="filter-group">
+      <label for="kanbanAssigneeFilter">Assignee</label>
+      <select id="kanbanAssigneeFilter"><option value="">All Users</option></select>
+    </div>
+    <div class="filter-group">
+      <label for="kanbanPriorityFilter">Priority</label>
+      <select id="kanbanPriorityFilter">
+        <option value="">All Priority</option>
+        <option value="critical">Critical</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </div>
+    <button type="button" id="kanbanRefreshBtn" class="btn-secondary btn-sm">↺ Refresh</button>
+  </div>
+
+  <!-- Kanban Board -->
+  <div class="kanban-board" id="kanbanBoard">
+    <div class="kanban-col" data-status="todo">
+      <div class="kanban-col-header kanban-todo">
+        <span class="col-dot"></span>
+        <span class="col-title">Todo</span>
+        <span class="col-count" id="colCount-todo">0</span>
+      </div>
+      <div class="kanban-cards" id="col-todo" data-status="todo"></div>
+    </div>
+
+    <div class="kanban-col" data-status="in_progress">
+      <div class="kanban-col-header kanban-inprogress">
+        <span class="col-dot"></span>
+        <span class="col-title">In Progress</span>
+        <span class="col-count" id="colCount-in_progress">0</span>
+      </div>
+      <div class="kanban-cards" id="col-in_progress" data-status="in_progress"></div>
+    </div>
+
+    <div class="kanban-col" data-status="review">
+      <div class="kanban-col-header kanban-review">
+        <span class="col-dot"></span>
+        <span class="col-title">Review</span>
+        <span class="col-count" id="colCount-review">0</span>
+      </div>
+      <div class="kanban-cards" id="col-review" data-status="review"></div>
+    </div>
+
+    <div class="kanban-col" data-status="completed">
+      <div class="kanban-col-header kanban-done">
+        <span class="col-dot"></span>
+        <span class="col-title">Completed</span>
+        <span class="col-count" id="colCount-completed">0</span>
+      </div>
+      <div class="kanban-cards" id="col-completed" data-status="completed"></div>
+    </div>
+  </div>
+
+  <div id="kanbanMessage" class="status-text" style="padding:20px;"></div>
+</section>
+</main>
+</div>
+
+<script>
+  window.__SESSION_ROLE = '<%= sessionUser ? sessionUser.role : "" %>';
+  window.__SESSION_USER_ID = <%= sessionUser ? sessionUser.id : 0 %>;
+  window.__CAN_MANAGE_TASKS = <%= sessionUser && ['super_admin','admin','project_manager'].includes(sessionUser.role) ? 'true' : 'false' %>;
+</script>
+<script src="/js/kanban.js?v=20260728"></script>
+</body>
+</html>

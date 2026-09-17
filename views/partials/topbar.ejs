@@ -1,17 +1,53 @@
 <section class="page-toolbar">
 <div class="toolbar-left">
-<button type="button" id="openSidebarBtn" class="sidebar-toggle" aria-label="Open sidebar">&#9776;</button>
-<a href="/users-page?name=<%= encodeURIComponent(name || 'User') %>" class="app-brand" aria-label="ProTrack home">
-<span class="app-brand-logo" aria-hidden="true">
-<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-<path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-</svg>
-</span>
-<span class="app-brand-name">ProTrack</span>
-</a>
+  <button type="button" id="openSidebarBtn" class="sidebar-toggle" aria-label="Open sidebar">&#9776;</button>
+  <a href="/dashboard" class="app-brand" aria-label="ProTrack home">
+    <span class="app-brand-logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+      </svg>
+    </span>
+    <span class="app-brand-name">ProTrack</span>
+  </a>
 </div>
+
+<div class="toolbar-center">
+  <% if (sessionUser) { %>
+  <div class="global-search-wrap" id="globalSearchWrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="globalSearchInput" class="global-search-input" placeholder="Search tasks, projects, users..." autocomplete="off">
+    <div id="searchResultsDropdown" class="search-dropdown hidden"></div>
+  </div>
+  <% } %>
+</div>
+
 <div class="toolbar-actions">
-<p class="welcome-text">Welcome, <span><%= name %></span></p>
-<button type="button" id="<%= buttonId %>" class="toolbar-btn"><%= buttonLabel %></button>
+  <% if (sessionUser) { %>
+  <!-- Notification Bell -->
+  <div class="notif-wrap" id="notifWrap">
+    <button type="button" class="notif-btn" id="notifBtn" aria-label="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-badge hidden" id="notifBadge">0</span>
+    </button>
+    <div class="notif-dropdown hidden" id="notifDropdown">
+      <div class="notif-header">
+        <span>Notifications</span>
+        <button type="button" class="notif-mark-all" id="notifMarkAll">Mark all read</button>
+      </div>
+      <ul class="notif-list" id="notifList">
+        <li class="notif-empty">No notifications</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="welcome-text">Welcome, <span><%= sessionUser.name %></span></p>
+  <% } %>
+  <% if (typeof buttonId !== 'undefined' && buttonId) { %>
+  <button type="button" id="<%= buttonId %>" class="toolbar-btn"><%= buttonLabel %></button>
+  <% } %>
 </div>
 </section>
+
+<script src="/js/toast.js"></script>
+<script src="/js/notifications.js"></script>
+<script src="/js/search.js"></script>

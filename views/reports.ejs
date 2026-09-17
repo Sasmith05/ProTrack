@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports — ProTrack</title>
+<meta name="description" content="ProTrack reports — export projects, tasks, and user data.">
+<link rel="stylesheet" href="/css/usersc.css?v=20260728">
+<link rel="stylesheet" href="/css/reports.css?v=20260728">
+<link rel="stylesheet" href="/css/toast.css?v=20260728">
+</head>
+<body>
+<div class="page-shell">
+<%- include('partials/topbar', { buttonId: '', buttonLabel: '' }) %>
+
+<main class="layout-main">
+<%- include('partials/sidebar', { activePage: activePage }) %>
+<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
+
+<section class="content-area">
+  <section class="page-context" aria-label="Page context">
+    <p class="page-kicker">Reports & Exports</p>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/dashboard">Dashboard</a><span>/</span><span>Reports</span>
+    </nav>
+  </section>
+
+  <div class="reports-grid">
+
+    <!-- Projects Report -->
+    <div class="report-card card">
+      <div class="report-icon report-icon--purple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div class="report-info">
+        <h3>Projects Report</h3>
+        <p>All projects with status and dates</p>
+      </div>
+      <div class="report-actions">
+        <a href="/reports/projects/csv" class="btn-export btn-csv" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          CSV
+        </a>
+        <a href="/reports/projects/pdf" class="btn-export btn-pdf" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          PDF
+        </a>
+      </div>
+    </div>
+
+    <!-- Tasks Report -->
+    <div class="report-card card">
+      <div class="report-icon report-icon--blue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <div class="report-info">
+        <h3>Tasks Report</h3>
+        <p>All tasks with assignees, priorities, and status</p>
+      </div>
+      <div class="report-actions">
+        <a href="/reports/tasks/csv" class="btn-export btn-csv" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          CSV
+        </a>
+        <a href="/reports/tasks/pdf" class="btn-export btn-pdf" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          PDF
+        </a>
+      </div>
+    </div>
+
+    <!-- Users Report (admin only) -->
+    <% if (sessionUser && (sessionUser.role === 'super_admin' || sessionUser.role === 'admin')) { %>
+    <div class="report-card card">
+      <div class="report-icon report-icon--green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="report-info">
+        <h3>Users Report</h3>
+        <p>All employees with roles, departments, and status</p>
+      </div>
+      <div class="report-actions">
+        <a href="/reports/users/csv" class="btn-export btn-csv" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          CSV
+        </a>
+        <a href="/reports/users/pdf" class="btn-export btn-pdf" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          PDF
+        </a>
+      </div>
+    </div>
+    <% } %>
+
+  </div>
+
+  <!-- Tips card -->
+  <div class="card report-tips">
+    <h3>💡 Export Tips</h3>
+    <ul>
+      <li><strong>CSV</strong> — Open in Excel, Google Sheets, or any spreadsheet app</li>
+      <li><strong>PDF</strong> — Pre-formatted printable report</li>
+      <li>All exports include a UTF-8 BOM so Excel reads special characters correctly</li>
+    </ul>
+  </div>
+
+</section>
+</main>
+</div>
+
+<script src="/js/toast.js?v=20260728"></script>
+</body>
+</html>

@@ -7,9 +7,7 @@ function showLoginError(text) {
 function togglePasswordVisibility(targetId, toggleButton) {
 	const input = document.getElementById(targetId);
 
-	if (!input) {
-		return;
-	}
+	if (!input) return;
 
 	if (input.type === 'password') {
 		input.type = 'text';
@@ -23,9 +21,7 @@ function togglePasswordVisibility(targetId, toggleButton) {
 async function parseResponse(response) {
 	const text = await response.text();
 
-	if (!text) {
-		return {};
-	}
+	if (!text) return {};
 
 	try {
 		return JSON.parse(text);
@@ -59,9 +55,8 @@ async function loginUser(event) {
 			return;
 		}
 
-		const redirectTo = data.redirectTo || '/users-page';
-		const name = encodeURIComponent(data.name || 'User');
-		window.location.href = `${redirectTo}?name=${name}`;
+		// Session is now set server-side; redirect to dashboard
+		window.location.href = data.redirectTo || '/dashboard';
 	} catch (_err) {
 		showLoginError('Server error. Please try again.');
 	}

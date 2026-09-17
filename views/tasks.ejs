@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasks — ProTrack</title>
+<meta name="description" content="ProTrack task management — create, assign, and track tasks across projects.">
+<link rel="stylesheet" href="/css/usersc.css?v=20260728">
+<link rel="stylesheet" href="/css/tasks.css?v=20260728">
+<link rel="stylesheet" href="/css/toast.css?v=20260728">
+</head>
+<body>
+<div class="page-shell">
+<% const canManage = sessionUser && ['super_admin','admin','project_manager'].includes(sessionUser.role); %>
+<%- include('partials/topbar', { buttonId: canManage ? 'openAddTaskModal' : '', buttonLabel: 'Add Task' }) %>
+
+<% if (canManage) { %>
+<!-- ── Add Task Modal ─────────────────────────────────────────── -->
+<section id="addTaskModal" class="modal-overlay hidden" aria-hidden="true">
+<div class="modal-card modal-card--wide">
+  <div class="modal-header">
+    <h2>Create New Task</h2>
+    <button type="button" id="closeAddTaskModal" class="modal-close" aria-label="Close">&times;</button>
+  </div>
+  <form id="addTaskForm" class="form-grid">
+    <div class="form-group form-group-full">
+      <label for="addTaskTitle">Task Title *</label>
+      <input type="text" id="addTaskTitle" placeholder="Enter task title" required>
+    </div>
+    <div class="form-group">
+      <label for="addTaskProject">Project *</label>
+      <select id="addTaskProject" required><option value="">— Select Project —</option></select>
+    </div>
+    <div class="form-group">
+      <label for="addTaskAssignee">Assign To</label>
+      <select id="addTaskAssignee"><option value="">— Unassigned —</option></select>
+    </div>
+    <div class="form-group form-group-full">
+      <label for="addTaskDescription">Description</label>
+      <textarea id="addTaskDescription" rows="3" placeholder="Task details..."></textarea>
+    </div>
+    <div class="form-group">
+      <label for="addTaskPriority">Priority</label>
+      <select id="addTaskPriority">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+        <option value="critical">Critical</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="addTaskStatus">Status</label>
+      <select id="addTaskStatus">
+        <option value="todo" selected>Todo</option>
+        <option value="in_progress">In Progress</option>
+        <option value="review">Review</option>
+        <option value="completed">Completed</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="addTaskEstHours">Estimated Hours</label>
+      <input type="number" id="addTaskEstHours" min="0" step="0.5" placeholder="0">
+    </div>
+    <div class="form-group">
+      <label for="addTaskStartDate">Start Date</label>
+      <input type="date" id="addTaskStartDate">
+    </div>
+    <div class="form-group">
+      <label for="addTaskDueDate">Due Date</label>
+      <input type="date" id="addTaskDueDate">
+    </div>
+    <div class="actions form-group-full split-actions">
+      <button type="submit" class="btn-primary">Create Task</button>
+      <button type="button" id="cancelAddTask" class="btn-secondary">Cancel</button>
+    </div>
+  </form>
+</div>
+</section>
+
+<!-- ── Edit Task Modal ────────────────────────────────────────── -->
+<section id="editTaskModal" class="modal-overlay hidden" aria-hidden="true">
+<div class="modal-card modal-card--wide">
+  <div class="modal-header">
+    <h2>Edit Task</h2>
+    <button type="button" id="closeEditTaskModal" class="modal-close" aria-label="Close">&times;</button>
+  </div>
+  <form id="editTaskForm" class="form-grid">
+    <input type="hidden" id="editTaskId">
+    <div class="form-group form-group-full">
+      <label for="editTaskTitle">Task Title *</label>
+      <input type="text" id="editTaskTitle" required>
+    </div>
+    <div class="form-group">
+      <label for="editTaskProject">Project *</label>
+      <select id="editTaskProject" required><option value="">— Select Project —</option></select>
+    </div>
+    <div class="form-group">
+      <label for="editTaskAssignee">Assign To</label>
+      <select id="editTaskAssignee"><option value="">— Unassigned —</option></select>
+    </div>
+    <div class="form-group form-group-full">
+      <label for="editTaskDescription">Description</label>
+      <textarea id="editTaskDescription" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="editTaskPriority">Priority</label>
+      <select id="editTaskPriority">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+        <option value="critical">Critical</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="editTaskStatus">Status</label>
+      <select id="editTaskStatus">
+        <option value="todo">Todo</option>
+        <option value="in_progress">In Progress</option>
+        <option value="review">Review</option>
+        <option value="completed">Completed</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="editTaskEstHours">Estimated Hours</label>
+      <input type="number" id="editTaskEstHours" min="0" step="0.5">
+    </div>
+    <div class="form-group">
+      <label for="editTaskActHours">Actual Hours</label>
+      <input type="number" id="editTaskActHours" min="0" step="0.5">
+    </div>
+    <div class="form-group">
+      <label for="editTaskStartDate">Start Date</label>
+      <input type="date" id="editTaskStartDate">
+    </div>
+    <div class="form-group">
+      <label for="editTaskDueDate">Due Date</label>
+      <input type="date" id="editTaskDueDate">
+    </div>
+    <div class="actions form-group-full split-actions">
+      <button type="submit" class="btn-primary">Save Changes</button>
+      <button type="button" id="cancelEditTask" class="btn-secondary">Cancel</button>
+    </div>
+  </form>
+</div>
+</section>
+<% } %>
+
+<!-- ── Task Detail Panel ──────────────────────────────────────── -->
+<div id="taskDetailPanel" class="task-detail-panel hidden">
+  <div class="task-detail-header">
+    <h3 id="detailTaskTitle">Task Details</h3>
+    <button type="button" id="closeDetailPanel" class="modal-close">&times;</button>
+  </div>
+  <div id="taskDetailBody" class="task-detail-body">
+    <div class="detail-skeleton">Loading...</div>
+  </div>
+</div>
+<div id="taskDetailOverlay" class="sidebar-overlay hidden"></div>
+
+<main class="layout-main">
+<%- include('partials/sidebar', { activePage: activePage }) %>
+<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
+
+<section class="content-area">
+  <section class="page-context" aria-label="Page context">
+    <p class="page-kicker">Task Management</p>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/dashboard">Dashboard</a><span>/</span><span>Tasks</span>
+    </nav>
+  </section>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar card">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label for="filterProject">Project</label>
+        <select id="filterProject"><option value="">All Projects</option></select>
+      </div>
+      <div class="filter-group">
+        <label for="filterAssignee">Assignee</label>
+        <select id="filterAssignee"><option value="">All Users</option></select>
+      </div>
+      <div class="filter-group">
+        <label for="filterStatus">Status</label>
+        <select id="filterStatus">
+          <option value="">All Status</option>
+          <option value="todo">Todo</option>
+          <option value="in_progress">In Progress</option>
+          <option value="review">Review</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filterPriority">Priority</label>
+        <select id="filterPriority">
+          <option value="">All Priority</option>
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+      <div class="filter-group filter-search">
+        <label for="taskSearchInput">Search</label>
+        <input type="text" id="taskSearchInput" placeholder="Search tasks...">
+      </div>
+      <div class="filter-group filter-actions-group">
+        <button type="button" id="applyFiltersBtn" class="btn-primary btn-sm">Apply</button>
+        <button type="button" id="clearFiltersBtn" class="btn-secondary btn-sm">Clear</button>
+      </div>
+    </div>
+    <div class="filter-sort-row">
+      <label for="taskSort">Sort by:</label>
+      <select id="taskSort">
+        <option value="created_desc">Newest First</option>
+        <option value="created_asc">Oldest First</option>
+        <option value="due_asc">Due Date ↑</option>
+        <option value="due_desc">Due Date ↓</option>
+        <option value="priority_desc">Priority ↓</option>
+        <option value="priority_asc">Priority ↑</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tasks Table -->
+  <section class="card tasks-card">
+    <div class="tasks-header">
+      <h2>All Tasks</h2>
+      <span id="tasksCount" class="tasks-count-badge">0 tasks</span>
+    </div>
+    <div id="tasksMessage" class="status-text"></div>
+    <div class="table-wrap">
+      <table id="tasksTable">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Project</th>
+            <th>Assignee</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tasksTableBody"></tbody>
+      </table>
+    </div>
+    <!-- Pagination -->
+    <div class="pagination-wrap" id="tasksPagination"></div>
+  </section>
+
+</section>
+</main>
+</div>
+
+<script>
+  window.__CAN_MANAGE_TASKS = <%= canManage ? 'true' : 'false' %>;
+  window.__SESSION_USER_ID = <%= sessionUser ? sessionUser.id : 0 %>;
+  window.__SESSION_ROLE = '<%= sessionUser ? sessionUser.role : "" %>';
+</script>
+<script src="/js/tasks.js?v=20260728"></script>
+</body>
+</html>

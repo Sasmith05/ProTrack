@@ -1,0 +1,116 @@
+/* access-denied.css — 403 page */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #0f1219;
+  color: #f1f5f9;
+  min-height: 100vh;
+}
+
+.denied-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(79,116,255,0.08) 0%, transparent 60%);
+}
+
+.denied-card {
+  background: #1e2330;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 20px;
+  padding: 52px 40px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  animation: fadeUp 0.35s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+.denied-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: rgba(239,68,68,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+}
+
+.denied-icon svg {
+  width: 36px;
+  height: 36px;
+  stroke: currentColor;
+}
+
+.denied-code {
+  font-size: 72px;
+  font-weight: 800;
+  margin: 0 0 8px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.denied-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0 0 12px;
+}
+
+.denied-message {
+  font-size: 14px;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin: 0 0 32px;
+}
+
+.denied-message strong {
+  color: #f1f5f9;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.denied-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.denied-btn {
+  padding: 10px 24px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s, transform 0.15s;
+  display: inline-block;
+}
+
+.denied-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+.denied-btn--primary {
+  background: linear-gradient(135deg, #4f74ff, #2f49d6);
+  color: #fff;
+}
+
+.denied-btn--secondary {
+  background: rgba(255,255,255,0.06);
+  color: #f1f5f9;
+  border: 1px solid rgba(255,255,255,0.1);
+}

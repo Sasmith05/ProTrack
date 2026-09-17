@@ -3,13 +3,15 @@
 
 <head>
 <title>Projects Dashboard</title>
-<link rel="stylesheet" href="/css/projects.css?v=20260401">
+<link rel="stylesheet" href="/css/projects.css?v=20260422">
 </head>
 
 <body>
 <div class="page-shell">
-<%- include('partials/topbar', { name: name, buttonId: 'openAddProjectModal', buttonLabel: 'Add Project' }) %>
+<% const canManage = sessionUser && ['super_admin','admin','project_manager'].includes(sessionUser.role); %>
+<%- include('partials/topbar', { buttonId: canManage ? 'openAddProjectModal' : '', buttonLabel: 'Add Project' }) %>
 
+<% if (canManage) { %>
 <section id="addProjectModal" class="modal-overlay hidden" aria-hidden="true">
 <div class="modal-card">
 <div class="modal-header">
@@ -32,6 +34,14 @@
 <div class="form-group">
 <label for="addProjectEndDate">End Date</label>
 <input type="date" id="addProjectEndDate" required>
+</div>
+<div class="form-group form-group-full">
+<label for="addProjectStatus">Status</label>
+<select id="addProjectStatus">
+<option value="ongoing" selected>Ongoing</option>
+<option value="completed">Completed</option>
+<option value="on_hold">On Hold</option>
+</select>
 </div>
 <div class="actions form-group-full split-actions">
 <button type="submit">Add Project</button>
@@ -66,6 +76,14 @@
 <label for="editProjectEndDate">End Date</label>
 <input type="date" id="editProjectEndDate" required>
 </div>
+<div class="form-group form-group-full">
+<label for="editProjectStatus">Status</label>
+<select id="editProjectStatus">
+<option value="ongoing">Ongoing</option>
+<option value="completed">Completed</option>
+<option value="on_hold">On Hold</option>
+</select>
+</div>
 <div class="actions form-group-full split-actions">
 <button type="submit">Save Changes</button>
 <button type="button" id="cancelProjectEdit" class="secondary">Cancel</button>
@@ -74,9 +92,10 @@
 <p id="editProjectMessage" class="status-text"></p>
 </div>
 </section>
+<% } %>
 
 <main class="layout-main">
-<%- include('partials/sidebar', { name: name, activePage: activePage }) %>
+<%- include('partials/sidebar', { activePage: activePage }) %>
 <div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
 
 <section class="content-area">
@@ -97,7 +116,8 @@
 <th>Description</th>
 <th>Start Date</th>
 <th>End Date</th>
-<th>Actions</th>
+<th>Status</th>
+<% if (canManage) { %><th>Actions</th><% } %>
 </tr>
 </thead>
 <tbody id="projectsTableBody"></tbody>
@@ -109,7 +129,11 @@
 </main>
 </div>
 
-<script src="/js/projects.js?v=20260401"></script>
+<script>
+  window.__SESSION_ROLE = '<%= sessionUser ? sessionUser.role : "" %>';
+  window.__CAN_MANAGE = <%= canManage ? 'true' : 'false' %>;
+</script>
+<script src="/js/projects.js?v=20260422"></script>
 
 </body>
 

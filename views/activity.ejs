@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity Log — ProTrack</title>
+<meta name="description" content="ProTrack activity log — audit trail of all system actions.">
+<link rel="stylesheet" href="/css/usersc.css?v=20260728">
+<link rel="stylesheet" href="/css/tasks.css?v=20260728">
+<link rel="stylesheet" href="/css/toast.css?v=20260728">
+</head>
+<body>
+<div class="page-shell">
+<%- include('partials/topbar', { buttonId: '', buttonLabel: '' }) %>
+
+<main class="layout-main">
+<%- include('partials/sidebar', { activePage: activePage }) %>
+<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
+
+<section class="content-area">
+  <section class="page-context" aria-label="Page context">
+    <p class="page-kicker">Activity Log</p>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/dashboard">Dashboard</a><span>/</span><span>Activity Log</span>
+    </nav>
+  </section>
+
+  <section class="card tasks-card">
+    <div class="tasks-header">
+      <h2>System Activity</h2>
+      <span class="tasks-count-badge" id="logsCount">Loading...</span>
+    </div>
+    <div id="logsMessage" class="status-text"></div>
+    <div class="table-wrap">
+      <table id="logsTable">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Action</th>
+            <th>Entity</th>
+            <th>IP Address</th>
+            <th>Date & Time</th>
+          </tr>
+        </thead>
+        <tbody id="logsTableBody"></tbody>
+      </table>
+    </div>
+    <div class="pagination-wrap" id="logsPagination"></div>
+  </section>
+
+</section>
+</main>
+</div>
+
+<script src="/js/toast.js?v=20260728"></script>
+<script>
+(function () {
+  let currentPage = 1;
+  const limit = 20;
+
+  async function loadLogs(page) {
+    const tbody = document.getElementById('logsTableBody');
+    const countEl = document.getElementById('logsCount');
+    const msgEl = document.getElementById('logsMessage');
+    tbody.innerHTML = '<tr><td colspan="6" class="loading-row">Loading logs...</td></tr>';
+
+    try {
+      const res = await fetch(`/api/activity-logs?page=${page}&limit=${limit}`, { headers: { Accept: 'application/json' } });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to load logs');
+
+      const logs = data.logs || [];
+      const p = data.pagination || {};
+      countEl.textContent = `${p.total || 0} entries`;
+
+      if (!logs.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-row">No activity logged yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = logs.map(log => `
+        <tr>
+          <td><strong>${escHtml(log.user_name)}</strong></td>
+          <td><span class="role-pill role-${escHtml(log.user_role)}">${escHtml(log.user_role)}</span></td>
+          <td>${escHtml(log.action)}</td>
+          <td>${log.entity_type ? `<span class="badge badge--ongoing">${escHtml(log.entity_type)}</span>` : '—'}</td>
+          <td><code>${escHtml(log.ip_address || '—')}</code></td>
+          <td>${new Date(log.created_at).toLocaleString('en-IN')}</td>
+        </tr>
+      `).join('');
+
+      renderPagination(p);
+    } catch (err) {
+      msgEl.textContent = err.message;
+      msgEl.className = 'status-text error';
+      tbody.innerHTML = '';
+    }
+  }
+
+  function renderPagination(p) {
+    const wrap = document.getElementById('logsPagination');
+    if (!wrap || !p.totalPages || p.totalPages <= 1) { if (wrap) wrap.innerHTML = ''; return; }
+    let html = '<div class="pagination">';
+    if (p.page > 1) html += `<button onclick="window.__loadLogs(${p.page - 1})">← Prev</button>`;
+    html += `<span>Page ${p.page} of ${p.totalPages}</span>`;
+    if (p.page < p.totalPages) html += `<button onclick="window.__loadLogs(${p.page + 1})">Next →</button>`;
+    html += '</div>';
+    wrap.innerHTML = html;
+  }
+
+  function escHtml(str) {
+    return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  window.__loadLogs = function(page) { currentPage = page; loadLogs(page); };
+
+  // Sidebar toggle
+  const sidebar = document.getElementById('mySidenav');
+  const overlay = document.getElementById('sidebarOverlay');
+  document.getElementById('openSidebarBtn').addEventListener('click', () => {
+    sidebar.classList.add('open'); sidebar.setAttribute('aria-hidden','false');
+    overlay.classList.remove('hidden'); overlay.setAttribute('aria-hidden','false');
+  });
+  document.getElementById('closeSidebarBtn').addEventListener('click', () => {
+    sidebar.classList.remove('open'); sidebar.setAttribute('aria-hidden','true');
+    overlay.classList.add('hidden'); overlay.setAttribute('aria-hidden','true');
+  });
+  if (overlay) overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open'); overlay.classList.add('hidden');
+  });
+
+  loadLogs(1);
+})();
+</script>
+</body>
+</html>

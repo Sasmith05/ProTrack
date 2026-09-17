@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar — ProTrack</title>
+<meta name="description" content="ProTrack calendar — view task deadlines and project milestones.">
+<link rel="stylesheet" href="/css/usersc.css?v=20260728">
+<link rel="stylesheet" href="/css/calendar.css?v=20260728">
+<link rel="stylesheet" href="/css/toast.css?v=20260728">
+</head>
+<body>
+<div class="page-shell">
+<%- include('partials/topbar', { buttonId: '', buttonLabel: '' }) %>
+
+<!-- Day Tasks Panel -->
+<div id="dayPanel" class="task-detail-panel hidden">
+  <div class="task-detail-header">
+    <h3 id="dayPanelTitle">Tasks</h3>
+    <button type="button" id="closeDayPanel" class="modal-close">&times;</button>
+  </div>
+  <div id="dayPanelBody" class="task-detail-body"></div>
+</div>
+<div id="dayPanelOverlay" class="sidebar-overlay hidden"></div>
+
+<main class="layout-main">
+<%- include('partials/sidebar', { activePage: activePage }) %>
+<div id="sidebarOverlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
+
+<section class="content-area">
+  <section class="page-context" aria-label="Page context">
+    <p class="page-kicker">Calendar View</p>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/dashboard">Dashboard</a><span>/</span><span>Calendar</span>
+    </nav>
+  </section>
+
+  <div class="calendar-container card">
+    <!-- Calendar Nav -->
+    <div class="calendar-nav">
+      <button type="button" id="calPrevBtn" class="cal-nav-btn" aria-label="Previous month">&#8592;</button>
+      <h2 id="calMonthTitle" class="cal-month-title">Loading...</h2>
+      <button type="button" id="calNextBtn" class="cal-nav-btn" aria-label="Next month">&#8594;</button>
+      <button type="button" id="calTodayBtn" class="btn-secondary btn-sm" style="margin-left:12px;">Today</button>
+    </div>
+
+    <!-- Day names header -->
+    <div class="cal-weekdays">
+      <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div>
+      <div>Thu</div><div>Fri</div><div>Sat</div>
+    </div>
+
+    <!-- Calendar grid -->
+    <div class="cal-grid" id="calGrid"></div>
+
+    <!-- Legend -->
+    <div class="cal-legend">
+      <span class="legend-item"><span class="legend-dot priority-critical"></span>Critical</span>
+      <span class="legend-item"><span class="legend-dot priority-high"></span>High</span>
+      <span class="legend-item"><span class="legend-dot priority-medium"></span>Medium</span>
+      <span class="legend-item"><span class="legend-dot priority-low"></span>Low</span>
+      <span class="legend-item"><span class="legend-dot status-completed"></span>Completed</span>
+    </div>
+  </div>
+
+</section>
+</main>
+</div>
+
+<script>
+  window.__SESSION_ROLE = '<%= sessionUser ? sessionUser.role : "" %>';
+</script>
+<script src="/js/calendar.js?v=20260728"></script>
+</body>
+</html>
