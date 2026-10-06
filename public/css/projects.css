@@ -240,7 +240,9 @@ body {
 }
 
 .nav-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   text-decoration: none;
   color: var(--text);
   font-size: 16px;
@@ -251,7 +253,27 @@ body {
   background: #12233a;
   min-height: 52px;
   width: 100%;
+  line-height: 1.2;
   transition: all 0.2s ease;
+}
+
+.sidebar-nav .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-nav .nav-link svg {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  flex-shrink: 0;
+}
+
+.sidebar-nav .nav-link span {
+  display: inline-flex;
+  align-items: center;
 }
 
 .nav-link:hover {

@@ -19,6 +19,8 @@ const editUserMessage = document.getElementById('editUserMessage');
 const addUserModal = document.getElementById('addUserModal');
 const sideNav = document.getElementById('mySidenav');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
+const openSidebarBtn = document.getElementById('openSidebarBtn');
+const closeSidebarBtn = document.getElementById('closeSidebarBtn');
 
 function openNav() {
 	if (!sideNav) return;
@@ -342,44 +344,56 @@ async function handleDeleteUser(userId) {
 
 // ─── Event listeners ─────────────────────────────────────────────────────────
 
-usersTableBody.addEventListener('click', function (event) {
-	const editButton = event.target.closest('.edit-button');
-	if (editButton) {
-		openEditFormByIndex(Number(editButton.dataset.index));
-		return;
-	}
+if (usersTableBody) {
+	usersTableBody.addEventListener('click', function (event) {
+		const editButton = event.target.closest('.edit-button');
+		if (editButton) {
+			openEditFormByIndex(Number(editButton.dataset.index));
+			return;
+		}
 
-	const deleteButton = event.target.closest('.delete-button');
-	if (deleteButton) handleDeleteUser(deleteButton.dataset.id);
-});
+		const deleteButton = event.target.closest('.delete-button');
+		if (deleteButton) handleDeleteUser(deleteButton.dataset.id);
+	});
+}
 
-addUserForm.addEventListener('submit', handleAddUser);
-editUserForm.addEventListener('submit', handleEditUser);
-document.getElementById('cancelEdit').addEventListener('click', closeEditForm);
-document.getElementById('closeEditUserModal').addEventListener('click', closeEditForm);
-document.getElementById('openAddUserModal').addEventListener('click', openAddUserModal);
-document.getElementById('closeAddUserModal').addEventListener('click', closeAddUserModal);
-document.getElementById('cancelAddUser').addEventListener('click', closeAddUserModal);
-document.getElementById('openSidebarBtn').addEventListener('click', openNav);
-document.getElementById('closeSidebarBtn').addEventListener('click', closeNav);
+if (addUserForm) addUserForm.addEventListener('submit', handleAddUser);
+if (editUserForm) editUserForm.addEventListener('submit', handleEditUser);
+const cancelEdit = document.getElementById('cancelEdit');
+const closeEditUserModal = document.getElementById('closeEditUserModal');
+const openAddUserModalBtn = document.getElementById('openAddUserModal');
+const closeAddUserModalBtn = document.getElementById('closeAddUserModal');
+const cancelAddUser = document.getElementById('cancelAddUser');
+
+if (cancelEdit) cancelEdit.addEventListener('click', closeEditForm);
+if (closeEditUserModal) closeEditUserModal.addEventListener('click', closeEditForm);
+if (openAddUserModalBtn) openAddUserModalBtn.addEventListener('click', openAddUserModal);
+if (closeAddUserModalBtn) closeAddUserModalBtn.addEventListener('click', closeAddUserModal);
+if (cancelAddUser) cancelAddUser.addEventListener('click', closeAddUserModal);
+if (openSidebarBtn) openSidebarBtn.addEventListener('click', openNav);
+if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeNav);
 
 if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeNav);
 
 document.addEventListener('keydown', function (event) {
 	if (event.key === 'Escape') {
-		closeAddUserModal();
-		closeEditForm();
+		if (typeof closeAddUserModal === 'function') closeAddUserModal();
+		if (typeof closeEditForm === 'function') closeEditForm();
 		closeNav();
 	}
 });
 
-addUserModal.addEventListener('click', function (event) {
-	if (event.target === addUserModal) closeAddUserModal();
-});
+if (addUserModal) {
+	addUserModal.addEventListener('click', function (event) {
+		if (event.target === addUserModal) closeAddUserModal();
+	});
+}
 
-editUserModal.addEventListener('click', function (event) {
-	if (event.target === editUserModal) closeEditForm();
-});
+if (editUserModal) {
+	editUserModal.addEventListener('click', function (event) {
+		if (event.target === editUserModal) closeEditForm();
+	});
+}
 
 const passwordToggles = document.querySelectorAll('.eye-button');
 passwordToggles.forEach(function (toggleButton) {
