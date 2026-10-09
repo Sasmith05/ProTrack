@@ -1,11 +1,12 @@
 const mariadb = require('mariadb');
 
 const pool = mariadb.createPool({
-	host: 'localhost',
-	user: 'root',
-	password: '2609',
-	database: 'nodeapp',
-	port: 3306
+	host: process.env.DB_HOST || 'localhost',
+	user: process.env.DB_USER || 'root',
+	password: process.env.DB_PASSWORD || '2609',
+	database: process.env.DB_NAME || 'nodeapp',
+	port: Number(process.env.DB_PORT || 3306),
+	connectionLimit: Number(process.env.DB_CONNECTION_LIMIT || 5)
 });
 
 async function initializeUsersTable() {

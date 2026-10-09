@@ -137,6 +137,12 @@ app.use((err, req, res, next) => {
 	next();
 });
 
-app.listen(PORT, () => {
-	console.log(`ProTrack running on http://localhost:${PORT}`);
-});
+// Vercel imports the app as a serverless handler; local development still uses
+// the regular Node listener.
+if (require.main === module) {
+	app.listen(PORT, () => {
+		console.log(`ProTrack running on http://localhost:${PORT}`);
+	});
+}
+
+module.exports = app;
